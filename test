@@ -66,7 +66,7 @@ commitInfo = cp.execSync(`git show ${hash} --oneline`).toString().split(' ');
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
 console.log('Processing commit: '.green);
-console.log(`  - ${commitInfo[0].yellow} - ${commitInfo[1].brown}`);
+console.log(`  - ${commitInfo[0]} (${commitInfo[1]})`.dim.italic);
 
 
 // Construct an array of files with method (added, modified, deleted)
@@ -112,7 +112,7 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
   console.log(`Processing ${filesLength} file(s):`.green);
-  console.log(diffTree.map( item => `  - ${item.method} ${item.path}` ).join('\n'));
+  console.log(diffTree.map( item => `  - ${item.method} ${item.path}` ).join('\n').dim.italic);
 
   if ( ensureDirs.length ) {
     // Refine ensure dirs
@@ -133,12 +133,12 @@ function ensureDirsBeforeTransfer() {
     let _dirPattern = new RegExp('^'+_dir+'.+', 'i');
     let hasChildren = ensureDirs.some( _ensureDir => _dirPattern.test(_ensureDir) );
     return !hasChildren;
-  }).map( dir => `./${dir}` );
+  }).map( dir => `${dir}` );
 
   let ensuredDirs = 0;
 
   console.log(`Ensuring remote directories:`.green);
-  console.log(refinedDirs.map( dir => `- ${dir}\n` ).join(''));
+  console.log(refinedDirs.map( dir => `  - ${dir}\n` ).join('').dim.italic);
 
   for ( let dir of ensureDirs ) {
     sftp.mkdir( dir, true)
