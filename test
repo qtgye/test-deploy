@@ -62,7 +62,7 @@ let ensureDirs = [];
 let hash = cp.execSync(`git log --pretty="%p" -1`).toString().split('\n')[0];
 // Ensure to get the parent commit
 hash = hash.split(' ')[0];
-commitInfo = cp.execSync(`git show ${hash} --oneline`).toString().spit(' ');
+commitInfo = cp.execSync(`git show ${hash} --oneline`).toString().split(' ');
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
 console.log('Processing commit: '.green);
