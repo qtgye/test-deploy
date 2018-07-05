@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 require('colors');
 
+const fs = require('fs');
 const cp = require('child_process');
 const args = require('minimist')(process.argv.slice(2));
 const SFTPClient = require('ssh2-sftp-client');
@@ -83,6 +84,7 @@ sftp.connect(SFTP_SETTINGS)
   });
 })
 .then((data) => {
+  console.log(fs.readFileSync('test.txt', 'utf-8'));
   console.log(data);
   process.exit();
 }).catch((err) => {
