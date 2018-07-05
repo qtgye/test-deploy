@@ -28,7 +28,9 @@ let errorFiles = 0;
 
 
 // Get files list from git logs
-let hash = cp.execSync(`git log --pretty="%h" -1`).toString().split('\n')[0];
+let hash = cp.execSync(`git log --pretty="%p" -1`).toString().split('\n')[0];
+// Ensure to get the parent commit
+let hash = hash.split(' ')[0];
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash}`).toString('utf-8');
 console.clear();
 console.log('Processing commit: ', hash);
