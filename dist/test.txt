@@ -1,2 +1,1 @@
 test file from dist
-test 2
