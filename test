@@ -21,6 +21,9 @@ const sftp = new SFTPClient();
 
 if ( !(env in SFTP_CREDENTIALS ) ) throw new Error('Credentials for requested env not supplied.');
 
+let processedFiles = 0;
+// let errorFiles = 0;
+
 
 // Get files list from git logs
 let hash = cp.execSync(`git log --pretty="%h" -1`).toString().split('\n')[0];
@@ -75,19 +78,33 @@ sftp.connect(SFTP_SETTINGS)
 
     switch ( _file.method ) {
       case 'D':
-        sftp.delete(_file.path);
+        sftp.delete(_file.path)
+        .then(onFileProcessed)
+        .catch(onFileError);
         break;
       default:
-        sftp.fastPut(_file.path, _file.path, []);
+        sftp.fastPut(_file.path, _file.path, [])
+        .then(onFileProcessed)
+        .catch(onFileError);
     }
 
   });
 })
-.then((data) => {
-  console.log(fs.readFileSync('test.txt', 'utf-8'));
-  console.log(data);
-  process.exit();
-}).catch((err) => {
+.catch((err) => {
     console.log(err, 'catch error');
     process.exit();
-})
+});
+
+
+function onFileProcessed() {
+  if ( ++processedFiles >= filesLength ) {
+    sftp.end();
+    console.log('Finished!'.green);
+  }
+}
+function onFileError() {
+  if ( ++processedFiles >=. filesLength ) {
+    sftp.end();
+    console.log('Finished!'.green);
+  }
+}
