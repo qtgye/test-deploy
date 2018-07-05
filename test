@@ -24,7 +24,7 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   return cp.execSync(`git log --pretty="%h" -5`).toString().split('\n').slice(-2)[0];
 }).then(hash => {
-  let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash}`).toString('utf-8');
+  let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id ${hash}`).toString('utf-8');
   console.log('diffTree for hash', hash);
   return diffTree;
 }).then((data) => {
