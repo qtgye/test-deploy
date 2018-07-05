@@ -1,10 +1,22 @@
 #!/usr/bin/env node
-require('colors');
 
+/**
+ * Clear Labs  - WPEngine SFTP deployment script
+ *
+ * This script is designed to be auto-deployed during push.
+ * This script does not check for errors when creating new directories,
+ * thus new files within new directories will throw errors, not affecting other transfers.
+ *
+ * Please upate the codes to account for directory checking once required in the deployment process.
+ */
+
+
+require('colors');
 const fs = require('fs');
 const cp = require('child_process');
 const args = require('minimist')(process.argv.slice(2));
 const SFTPClient = require('ssh2-sftp-client');
+
 
 const SFTP_CREDENTIALS = {
   dev: {
@@ -12,15 +24,33 @@ const SFTP_CREDENTIALS = {
     port: '2222',
     username: 'clearlabsdev-codeship-dev',
     password: '(0D3sh1pd3V'
+  },
+  staging: {
+    host: 'clearstaging.sftp.wpengine.com',
+    port: '2222',
+    username: 'clearstaging-codeship-staging',
+    password: '(0D3sh1p8Ta9E'
+  },
+  prod: {
+    host: 'clearlabs.sftp.wpengine.com',
+    port: '2222',
+    username: 'clearlabs-codeship-prod',
+    password: '(0D3sh1pP12oD'
   }
 };
-const FTP_IGNORE = [];
+const FTP_IGNORE = [
+  // Array of RegExp patterns
+];
 const env = args.env;
 const SFTP_SETTINGS = SFTP_CREDENTIALS[env];
 const sftp = new SFTPClient();
 
+
+// Check for credentials
 if ( !(env in SFTP_CREDENTIALS ) ) throw new Error('Credentials for requested env not supplied.');
 
+
+// Globals
 let processedFiles = 0;
 let filesDeleted = 0;
 let filesAddedOfModified = 0;
@@ -34,6 +64,7 @@ hash = hash.split(' ')[0];
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
 console.log('Processing commit: ', hash);
+
 
 // Construct an array of files with method (added, modified, deleted)
 diffTree = diffTree.split('\n').slice(0,-1)
@@ -62,12 +93,14 @@ diffTree = diffTree.split('\n').slice(0,-1)
     return item;
   });
 
+
 // Exit if no files to process
 let filesLength = diffTree.length;
 if ( !filesLength ) {
   console.log(`\nNo files needed to be transfered.\n`);
   process.exit();
 };
+
 
 // Start remote processing
 console.log('Connecting to remote...');
@@ -79,7 +112,6 @@ sftp.connect(SFTP_SETTINGS)
   // sftp.list('.')
   // .then(data => console.log('list', data))
   // .catch(err => console.log('list error ', err));
-
 
   console.log(`\nProcessing ${filesLength} file(s):\n`);
   console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
