@@ -16,7 +16,7 @@ const FTP_IGNORE = {
 };
 const env = args.env;
 const FTP_SETTINGS = FTP_CREDENTIALS[env];
-let sftp = new SFTPClient();
+const sftp = new SFTPClient();
 
 sftp.connect(SFTP_CREDENTIALS)
 }).then(() => {
