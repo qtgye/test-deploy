@@ -111,7 +111,9 @@ function onFileProcessed() {
     outputLog();
   }
 }
-function onFileError() {
+function onFileError(err) {
+  console.error(err);
+
   errorFiles++;
   if ( ++processedFiles >= filesLength ) {
     sftp.end();
