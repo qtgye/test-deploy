@@ -124,5 +124,5 @@ function outputLog() {
   console.log('============================'.gray);
   console.log(`Files added/modified: ${filesAddedOfModified}`.yellow);
   console.log(`Files deleted       : ${filesDeleted}`.yellow);
-  console.log(`Files error       : ${errorFiles}`.red);
+  console.log(`Files error         : ${errorFiles}`.red);
 }
