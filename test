@@ -32,7 +32,7 @@ sftp.connect(SFTP_SETTINGS)
 .then(diffTree => {
   console.log(diffTree.yellow);
    // Construct an array of files with method (added, modified, deleted)
-  return = diffTree.split('\n').slice(0,-1)
+  return diffTree.split('\n').slice(0,-1)
     // Build file info object
     .map( item => {
       item = item.replace('\t', ':::').split(':::');
@@ -60,6 +60,7 @@ sftp.connect(SFTP_SETTINGS)
 })
 .then( diffTree => {
   console.log(diffTree);
+  return diffTree;
 })
 .then((data) => {
   console.log(data);
