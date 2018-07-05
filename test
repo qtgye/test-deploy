@@ -109,9 +109,12 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
 
-  // sftp.list('.')
-  // .then(data => console.log('list', data))
-  // .catch(err => console.log('list error ', err));
+  sftp.list('.')
+  .then(data => console.log('list', data))
+  .then(() => process.exit())
+  .catch(err => console.log('list error ', err));
+
+  return;
 
   console.log(`\nProcessing ${filesLength} file(s):\n`);
   console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
