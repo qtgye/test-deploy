@@ -1,3 +1,0 @@
-test file from dist
-test 2
-test 3
