@@ -18,7 +18,7 @@ const env = args.env;
 const SFTP_SETTINGS = SFTP_CREDENTIALS[env];
 const sftp = new SFTPClient();
 
-if ( !(env in FTP_CREDENTIALS ) ) throw new Error('Credentials for requested env not supplied.');
+if ( !(env in SFTP_CREDENTIALS ) ) throw new Error('Credentials for requested env not supplied.');
 
 
 // Get files list from git logs
