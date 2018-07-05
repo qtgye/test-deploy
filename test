@@ -188,7 +188,7 @@ function onFileProcessed() {
     outputLog();
   }
 }
-function onFileError(err, filePath) {
+function onFileError(err, filePath = '') {
   console.error(filePath.red, err);
 
   errorFiles++;
