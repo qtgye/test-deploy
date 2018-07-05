@@ -78,7 +78,7 @@ sftp.connect(SFTP_SETTINGS)
         sftp.delete(_file.path);
         break;
       default:
-        sftp.fastPut(_file.path, _file.path, [options]);
+        sftp.fastPut(_file.path, _file.path, []);
     }
 
   });
