@@ -174,7 +174,9 @@ function transferFiles() {
           filesAddedOfModified++;
           onFileProcessed();
         })
-        .catch(onFileError);
+        .catch(err => {
+          onFileError(err, _file.path);
+        });
     }
 
   });
@@ -186,8 +188,8 @@ function onFileProcessed() {
     outputLog();
   }
 }
-function onFileError(err) {
-  console.error(err);
+function onFileError(err, filePath) {
+  console.error(filePath.red, err);
 
   errorFiles++;
   if ( ++processedFiles >= filesLength ) {
