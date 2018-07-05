@@ -76,9 +76,9 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
 
-  sftp.list('.')
-  .then(data => console.log('list', data))
-  .catch(err => console.log('list error ', err));
+  // sftp.list('.')
+  // .then(data => console.log('list', data))
+  // .catch(err => console.log('list error ', err));
 
 
   console.log(`\nProcessing ${filesLength} file(s):\n`);
