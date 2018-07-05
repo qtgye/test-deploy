@@ -6,10 +6,12 @@ const args = require('minimist')(process.argv.slice(2));
 const SFTPClient = require('ssh2-sftp-client');
 
 const SFTP_CREDENTIALS = {
-  host: 'clearlabsdev.sftp.wpengine.com',
-  port: '2222',
-  username: 'clearlabsdev-codeship-dev',
-  password: '(0D3sh1pd3V'
+  dev: {
+    host: 'clearlabsdev.sftp.wpengine.com',
+    port: '2222',
+    username: 'clearlabsdev-codeship-dev',
+    password: '(0D3sh1pd3V'
+  }
 };
 const FTP_IGNORE = {
 
