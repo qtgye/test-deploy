@@ -13,9 +13,7 @@ const SFTP_CREDENTIALS = {
     password: '(0D3sh1pd3V'
   }
 };
-const FTP_IGNORE = {
-
-};
+const FTP_IGNORE = [];
 const env = args.env;
 const SFTP_SETTINGS = SFTP_CREDENTIALS[env];
 const sftp = new SFTPClient();
