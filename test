@@ -15,10 +15,10 @@ const FTP_IGNORE = {
 
 };
 const env = args.env;
-const FTP_SETTINGS = FTP_CREDENTIALS[env];
+const SFTP_SETTINGS = SFTP_CREDENTIALS[env];
 const sftp = new SFTPClient();
 
-sftp.connect(SFTP_CREDENTIALS)
+sftp.connect(SFTP_SETTINGS)
 .then(() => {
   return cp.execSync(`git log --pretty="%h" -5`).toString().split('\n').slice(-2)[0];
 }).then((data) => {
