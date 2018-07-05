@@ -55,6 +55,7 @@ let processedFiles = 0;
 let filesDeleted = 0;
 let filesAddedOfModified = 0;
 let errorFiles = 0;
+let ensureDirs = [];
 
 
 // Get files list from git logs
@@ -87,9 +88,9 @@ diffTree = diffTree.split('\n').slice(0,-1)
   // Parse directories to ensure on remote
   .map( item => {
     let dir = item.path.match( /(.+)\/.+$/i );
-    // if ( dir && !ensureDirs.includes(dir[1]) && item.method !== 'D' ) {
-    //   ensureDirs.push(dir[1]);
-    // }
+    if ( dir && !ensureDirs.includes(dir[1]) && item.method !== 'D' ) {
+      ensureDirs.push(dir[1]);
+    }
     return item;
   });
 
@@ -109,29 +110,47 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
 
-  // sftp.list('.')
-  // .then(data => console.log('list', data))
-  // .then(() => process.exit())
-  // .catch(err => console.log('list error ', err));
-
-  sftp.client.shell(null, null, function(err, stream) {
-    if (err) throw err;
-    stream.on('close', function() {
-      sftp.client.end();
-      process.exit();
-    })
-    .on('error', function (err) {
-      console.error(err)
-    })
-    stream.end('find .');
-  });
-
-  return;
-
   console.log(`\nProcessing ${filesLength} file(s):\n`);
   console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
-  console.log('\n\n')
+  console.log('\n\n');
 
+  if ( ensureDirs.length ) {
+    // Refine ensure dirs
+    return ensureDirsBeforeTransfer();
+  } else {
+    transferFiles();
+  }
+})
+.catch((err) => {
+    console.log(err, 'catch error');
+    process.exit();
+});
+
+
+function ensureDirsBeforeTransfer() {
+  // Refine ensuredDirs
+  let refinedDirs = ensureDirs.filter( _dir => {
+    let _dirPattern = new RegExp('^'+_dir+'.+', 'i');
+    let hasChildren = ensureDirs.some( _ensureDir => _dirPattern.test(_ensureDir) );
+    return !hasChildren;
+  }).map( dir => `${REMOTE_ROOT}/${dir}` );
+
+  let ensuredDirs = 0;
+
+  console.log(`Ensuring remote directories:`.grey);
+  console.log(refinedDirs.map( dir => `- ${dir}\n`.grey ).join('').grey);
+
+  for ( let dir of ensureDirs ) {
+    _ftp.mkdir( dir, true, function ( error ) {
+      if ( error ) console.log('Unable to create directory',dir[1]);
+      if ( ++ensuredDirs < ensureDirs.length ) return;
+      transferFiles();
+    });
+  }
+}
+
+
+function transferFiles() {
   diffTree.forEach(function ( _file ) {
 
     _file.path = `${_file.path}`;
@@ -155,12 +174,7 @@ sftp.connect(SFTP_SETTINGS)
     }
 
   });
-})
-.catch((err) => {
-    console.log(err, 'catch error');
-    process.exit();
-});
-
+}
 
 function onFileProcessed() {
   if ( ++processedFiles >= filesLength ) {
