@@ -31,7 +31,7 @@ let errorFiles = 0;
 let hash = cp.execSync(`git log --pretty="%p" -1`).toString().split('\n')[0];
 // Ensure to get the parent commit
 hash = hash.split(' ')[0];
-let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash}`).toString('utf-8');
+let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
 console.log('Processing commit: ', hash);
 
