@@ -114,7 +114,7 @@ sftp.connect(SFTP_SETTINGS)
   // .then(() => process.exit())
   // .catch(err => console.log('list error ', err));
 
-  sftp.client.shell(function(err, stream) {
+  sftp.client.shell(null, null, function(err, stream) {
     if (err) throw err;
     stream.on('close', function() {
       sftp.client.end();
