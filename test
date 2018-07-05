@@ -140,10 +140,10 @@ function ensureDirsBeforeTransfer() {
   console.log(`Ensuring remote directories:`.green);
   console.log(refinedDirs.map( dir => `  - ${dir}\n` ).join('').dim.italic);
 
-  for ( let dir of ensureDirs ) {
+  for ( let dir of refinedDirs ) {
     sftp.mkdir( dir, true)
     .then(() =>  {
-      if ( ++ensuredDirs < ensureDirs.length ) return;
+      if ( ++ensuredDirs < refinedDirs.length ) return;
       transferFiles();
     })
     .catch(err => {
