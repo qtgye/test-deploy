@@ -62,9 +62,11 @@ let ensureDirs = [];
 let hash = cp.execSync(`git log --pretty="%p" -1`).toString().split('\n')[0];
 // Ensure to get the parent commit
 hash = hash.split(' ')[0];
+commitInfo = cp.execSync(`git show ${hash} --oneline`).toString().spit(' ');
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
-console.log('Processing commit: ', hash);
+console.log('Processing commit: '.green);
+console.log(`${commitInfo[0].yellow} - commitInfo[1].brown`);
 
 
 // Construct an array of files with method (added, modified, deleted)
@@ -104,15 +106,13 @@ if ( !filesLength ) {
 
 
 // Start remote processing
-console.log('Connecting to remote...');
+console.log('Connecting to remote...'.green);
 
 sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
-
-  console.log(`\nProcessing ${filesLength} file(s):\n`);
-  console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
-  console.log('\n\n');
+  console.log(`Processing ${filesLength} file(s):`);
+  console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n  - '));
 
   if ( ensureDirs.length ) {
     // Refine ensure dirs
