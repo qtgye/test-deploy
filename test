@@ -30,7 +30,7 @@ let errorFiles = 0;
 // Get files list from git logs
 let hash = cp.execSync(`git log --pretty="%h" -1`).toString().split('\n')[0];
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id ${hash}`).toString('utf-8');
-console.log('diffTree for hash', hash);
+console.log('diffTree for hash', hash, diffTree);
 
 // Construct an array of files with method (added, modified, deleted)
 diffTree = diffTree.split('\n').slice(0,-1)
@@ -79,7 +79,7 @@ sftp.connect(SFTP_SETTINGS)
 
 
   console.log(`\nProcessing ${filesLength} file(s):\n`);
-  console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
+  // console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
 
   diffTree.forEach(function ( _file ) {
 
