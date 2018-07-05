@@ -19,7 +19,7 @@ const FTP_SETTINGS = FTP_CREDENTIALS[env];
 const sftp = new SFTPClient();
 
 sftp.connect(SFTP_CREDENTIALS)
-}).then(() => {
+.then(() => {
   return cp.execSync(`git log --pretty="%h" -5`).toString().split('\n').slice(-2)[0];
 }).then((data) => {
     console.log(data, 'the data info');
