@@ -29,7 +29,8 @@ let errorFiles = 0;
 
 // Get files list from git logs
 let hash = cp.execSync(`git log --pretty="%h" -1`).toString().split('\n')[0];
-let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id ${hash}`).toString('utf-8');
+let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash}`).toString('utf-8');
+console.clear();
 console.log('diffTree for hash', hash, diffTree);
 
 // Construct an array of files with method (added, modified, deleted)
