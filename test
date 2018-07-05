@@ -23,9 +23,12 @@ const sftp = new SFTPClient();
 sftp.connect(SFTP_SETTINGS)
 .then(() => {
   return cp.execSync(`git log --pretty="%h" -5`).toString().split('\n').slice(-2)[0];
+}).then(hash => {
+  return cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash}`).toString('utf-8');
 }).then((data) => {
   console.log(data);
+  process.exit();
 }).catch((err) => {
     console.log(err, 'catch error');
+    process.exit();
 })
-.finally(() => process.exit());
