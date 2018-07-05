@@ -54,9 +54,9 @@ diffTree = diffTree.split('\n').slice(0,-1)
   // Parse directories to ensure on remote
   .map( item => {
     let dir = item.path.match( /(.+)\/.+$/i );
-    if ( dir && !ensureDirs.includes(dir[1]) && item.method !== 'D' ) {
-      ensureDirs.push(dir[1]);
-    }
+    // if ( dir && !ensureDirs.includes(dir[1]) && item.method !== 'D' ) {
+    //   ensureDirs.push(dir[1]);
+    // }
     return item;
   });
 
