@@ -133,7 +133,7 @@ function ensureDirsBeforeTransfer() {
     let _dirPattern = new RegExp('^'+_dir+'.+', 'i');
     let hasChildren = ensureDirs.some( _ensureDir => _dirPattern.test(_ensureDir) );
     return !hasChildren;
-  }).map( dir => `/${dir}` );
+  }).map( dir => `./${dir}/` );
 
   let ensuredDirs = 0;
 
