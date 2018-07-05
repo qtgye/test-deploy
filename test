@@ -114,10 +114,17 @@ sftp.connect(SFTP_SETTINGS)
   // .then(() => process.exit())
   // .catch(err => console.log('list error ', err));
 
-  sftp.client.shell('find .')
-  .then(list => console.log(list))
-  .then(() => process.exit() )
-  .catch(err => console.error(err));
+  sftp.client.shell('find .', {}, function (err, stream) {
+
+    if ( err ) {
+      console.error(err)
+    } else {
+      console.log(list);
+    }
+
+    process.exit();
+
+  });
 
   return;
 
