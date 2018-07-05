@@ -66,7 +66,7 @@ commitInfo = cp.execSync(`git show ${hash} --oneline`).toString().split(' ');
 let diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${hash} HEAD`).toString('utf-8');
 console.clear();
 console.log('Processing commit: '.green);
-console.log(`${commitInfo[0].yellow} - commitInfo[1].brown`);
+console.log(`. - ${commitInfo[0].yellow} - ${commitInfo[1].brown}`);
 
 
 // Construct an array of files with method (added, modified, deleted)
@@ -137,13 +137,17 @@ function ensureDirsBeforeTransfer() {
 
   let ensuredDirs = 0;
 
-  console.log(`Ensuring remote directories:`.grey);
-  console.log(refinedDirs.map( dir => `- ${dir}\n`.grey ).join('').grey);
+  console.log(`Ensuring remote directories:`.green);
+  console.log(refinedDirs.map( dir => `- ${dir}\n` ).join(''));
 
   for ( let dir of ensureDirs ) {
-    sftp.mkdir( dir, true, function ( error ) {
-      if ( error ) console.log('Unable to create directory',dir[1]);
+    sftp.mkdir( dir, true)
+    .then(() =>  {
       if ( ++ensuredDirs < ensureDirs.length ) return;
+      transferFiles();
+    })
+    .catch(err => {
+      if ( error ) console.log('Unable to create directory',dir[1]);
       transferFiles();
     });
   }
