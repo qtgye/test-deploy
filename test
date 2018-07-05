@@ -103,7 +103,7 @@ function onFileProcessed() {
   }
 }
 function onFileError() {
-  if ( ++processedFiles >=. filesLength ) {
+  if ( ++processedFiles >= filesLength ) {
     sftp.end();
     console.log('Finished!'.green);
   }
