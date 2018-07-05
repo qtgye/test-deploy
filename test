@@ -141,7 +141,7 @@ function ensureDirsBeforeTransfer() {
   console.log(refinedDirs.map( dir => `- ${dir}\n`.grey ).join('').grey);
 
   for ( let dir of ensureDirs ) {
-    _ftp.mkdir( dir, true, function ( error ) {
+    sftp.mkdir( dir, true, function ( error ) {
       if ( error ) console.log('Unable to create directory',dir[1]);
       if ( ++ensuredDirs < ensureDirs.length ) return;
       transferFiles();
