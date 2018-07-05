@@ -24,7 +24,9 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   return cp.execSync(`git log --pretty="%h" -1`).toString().split('\n').slice(-2)[0];
 }).then((sinceHash) => {
-    diffTree = cp.execSync(`git diff-tree --name-status --no-commit-id -r ${sinceHash}`).toString('utf-8');
+  return cp.execSync(`git diff-tree --name-status --no-commit-id -r ${sinceHash}`).toString('utf-8');
+}).then((data) => {
+  console.log(data);
 }).catch((err) => {
     console.log(err, 'catch error');
 });
