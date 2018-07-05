@@ -72,6 +72,11 @@ console.log('Connecting to remote...');
 sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
+
+  sftp.list('/')
+  .then(data => console.log('list', data));
+
+
   console.log(`\nProcessing ${filesLength} file(s):\n`);
   console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
 
