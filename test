@@ -22,7 +22,9 @@ const sftp = new SFTPClient();
 if ( !(env in SFTP_CREDENTIALS ) ) throw new Error('Credentials for requested env not supplied.');
 
 let processedFiles = 0;
-// let errorFiles = 0;
+let filesDeleted = 0;
+let filesAddedOfModified = 0;
+let errorFiles = 0;
 
 
 // Get files list from git logs
@@ -71,6 +73,7 @@ sftp.connect(SFTP_SETTINGS)
 .then(() => {
   console.log('Connected!'.green);
   console.log(`\nProcessing ${filesLength} file(s):\n`);
+  console.log(diffTree.map( item => `${item.method} ${item.path}` ).join('\n'));
 
   diffTree.forEach(function ( _file ) {
 
@@ -79,12 +82,18 @@ sftp.connect(SFTP_SETTINGS)
     switch ( _file.method ) {
       case 'D':
         sftp.delete(_file.path)
-        .then(onFileProcessed)
+        .then(function () {
+          filesDeleted++;
+          onFileProcessed();
+        })
         .catch(onFileError);
         break;
       default:
         sftp.fastPut(_file.path, _file.path, [])
-        .then(onFileProcessed)
+        .then(function () {
+          filesAddedOfModified++;
+          onFileProcessed();
+        })
         .catch(onFileError);
     }
 
@@ -99,12 +108,21 @@ sftp.connect(SFTP_SETTINGS)
 function onFileProcessed() {
   if ( ++processedFiles >= filesLength ) {
     sftp.end();
-    console.log('Finished!'.green);
+    outputLog();
   }
 }
 function onFileError() {
+  errorFiles++;
   if ( ++processedFiles >= filesLength ) {
     sftp.end();
-    console.log('Finished!'.green);
+    outputLog();
   }
+}
+
+function outputLog() {
+  console.log('Finished!'.green);
+  console.log('============================'.gray);
+  console.log(`Files added/modified: ${filesAddedOfModified}`.yellow);
+  console.log(`Files deleted       : ${filesDeleted}`.yellow);
+  console.log(`Files error       : ${errorFiles}`.red);
 }
