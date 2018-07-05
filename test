@@ -27,4 +27,5 @@ sftp.connect(SFTP_SETTINGS)
   console.log(data);
 }).catch((err) => {
     console.log(err, 'catch error');
-});
+})
+.finally(() => process.exit());
