@@ -3,6 +3,28 @@ require('colors');
 
 const cp = require('child_process');
 const args = require('minimist')(process.argv.slice(2));
-const FTPClient = require('ftp');
+const SFTPClient = require('ssh2-sftp-client');
+const sftp = new Client();
 
-console.log(args);
+const SFTP_CREDENTIALS = {
+  host: 'clearlabsdev.sftp.wpengine.com',
+  port: '2222',
+  username: 'clearlabsdev-codeship-dev',
+  password: '(0D3sh1pd3V'
+};
+const FTP_IGNORE = {
+
+};
+const env = args.env;
+const FTP_SETTINGS = FTP_CREDENTIALS[env];
+let sftp = new SFTPClient();
+
+// sshpass -p ‘(0D3sh1pd3V’ sftp -P2222 clearlabsdev-codeship-dev@clearlabsdev.sftp.wpengine.com
+sftp.connect(SFTP_CREDENTIALS)
+}).then(() => {
+    return sftp.list(__dirname);
+}).then((data) => {
+    console.log(data, 'the data info');
+}).catch((err) => {
+    console.log(err, 'catch error');
+});
